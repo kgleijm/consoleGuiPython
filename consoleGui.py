@@ -53,7 +53,6 @@ class consoleGui:
             # ask question and prepare for answers
             possibleAnswers = []
             for i, option in enumerate(options):
-
                 # distill info
                 newAns = option[0:1].upper()
                 firstChar = option[1:2].upper()
@@ -78,14 +77,19 @@ class consoleGui:
                         return i
             print("that's not an option, type \"X\" if you don't know")
 
-
-
-
-
     # method that returns an int based on a question
     @staticmethod
-    def getInt(self):
-        pass
+    def getInt(question):
+        print(question)
+        while True:
+            ans = input()
+            output = 0
+            if ans == "exit":
+                return -1
+            try:
+                return int(ans)
+            except:
+                print("that is not a valid answer, try again or type exit to exit")
 
     # checks if there are no errors in answers
     @staticmethod
@@ -93,4 +97,4 @@ class consoleGui:
         pass
 
 
-print(consoleGui.multipleChoice("here are some options!", "ab", "bc", "ca"))
+print(str(consoleGui.getInt("give int")))
