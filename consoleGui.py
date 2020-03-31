@@ -55,7 +55,7 @@ class consoleGui:
             for i, option in enumerate(options):
 
                 # distill info
-                newAns = option[0:1]
+                newAns = option[0:1].upper()
                 firstChar = option[1:2].upper()
                 listOption = "[" + newAns + "]" + " " + firstChar + option[2:0]
 
