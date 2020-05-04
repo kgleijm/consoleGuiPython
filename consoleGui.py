@@ -130,6 +130,85 @@ def getElementByMultipleChoice(question, input):
     else:
         print("ERROR: not a valid iterable for multiplechoice")
 
+class Class(Element, ABC):
+
+    # Data structures to hold objects of this class(static)
+    objectDict = dict()
+    objectList = list()
+
+    # call in __init__ child object to set "variables" used in child class
+    # "variables" are  key value pairs
+    def __init__(self, **vars):
+        # Data structure to hold variables (non-static)
+        self.variableDict = vars
+
+    @abstractmethod
+    def getMPQlisting(self):
+        pass
+
+    @abstractmethod
+    def list(self):
+        pass
+
+    @abstractmethod
+    def get(self, variableName):
+        pass
+
+    @abstractmethod
+    def set(self, variableName, value):
+        pass
+
+    def getListOfObjectsWithValue(self, variable, value):
+        output = list()
+        for ob in type(self).objectDict:
+            if ob.variableDict[variable] == value:
+                output.append(ob)
+        return output
+
+class StateEngine:
+
+    class State:
+
+        def __init__(self, inp_func, inp_description):
+            self.func = inp_func
+            self.desc = inp_description
+
+        def run(self):
+            self.func()
+
+        def getDescription(self):
+            return self.desc
+
+    currentState = None
+    running = False
+
+    @staticmethod
+    def start():
+        StateEngine.running = True
+        while StateEngine.running:
+            StateEngine.currentState.run()
+
+    @staticmethod
+    def stop():
+        StateEngine.running = False
+
+    @staticmethod
+    def setState(newState):
+        StateEngine.currentState = newState
+        if not StateEngine.running:
+            StateEngine.start()
+
+    @staticmethod
+    def setStateByMultipleChoice(question, *states):
+        StateEngine.setState(states[multipleChoice(question, [str(state[0]) + state[1].getDescription() for state in enumerate(states)])])
+
+
+
+
+
+
+
+
 
 
 
