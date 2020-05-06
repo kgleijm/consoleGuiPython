@@ -112,11 +112,20 @@ def noErrorsInValues(self):
 
 class Element(ABC):
 
+    def __init__(self):
+        self.key = ""
+
     def list(self):
         pass
 
     def getMPQlisting(self):
         pass
+
+    def setKey(self, key):
+        self.key = key
+
+    def getKey(self):
+        return self.key
 
 def getElementByMultipleChoice(question, input):
     # print(type(input))
@@ -166,7 +175,8 @@ class Class(Element, ABC):
         return output
 
 class StateEngine:
-
+    # class thate contains an action and description of the state to
+    # minimize boilerplate code
     class State:
 
         def __init__(self, inp_func, inp_description):
@@ -182,16 +192,19 @@ class StateEngine:
     currentState = None
     running = False
 
+    # starts the state engine
     @staticmethod
     def start():
         StateEngine.running = True
         while StateEngine.running:
             StateEngine.currentState.run()
 
+    # stops the state engine
     @staticmethod
     def stop():
         StateEngine.running = False
 
+    #  set new state
     @staticmethod
     def setState(newState):
         StateEngine.currentState = newState
@@ -202,13 +215,58 @@ class StateEngine:
     def setStateByMultipleChoice(question, *states):
         StateEngine.setState(states[multipleChoice(question, [str(state[0]) + state[1].getDescription() for state in enumerate(states)])])
 
+class DataManager:
+    # dict that holds all dicts of registered objects accessed by key:
+    typeDict = dict()
+    lastUniqueKey = 0
 
+    # function that adds element to its own dict and if it doesn't exist, creates that dict
+    @staticmethod
+    def addByKey(key, inp_element):
+        inp_type = type(inp_element)
+        if inp_type in DataManager.typeDict:
+            DataManager.typeDict[inp_type][str(key)] = inp_element
+        else:
+            DataManager.typeDict[inp_type] = dict()
+            DataManager.typeDict[inp_type][str(key)] = inp_element
+        inp_element.setKey(str(key))
 
+    @staticmethod
+    def add(inp_element):
+        DataManager.addByKey(DataManager.getUniqueKey(inp_element), inp_element)
 
+    # Generate unique keys for elements
+    @staticmethod
+    def getUniqueKey(inp_element):
+        inp_type = type(inp_element)
+        if inp_type in DataManager.typeDict:
+            while str(DataManager.lastUniqueKey) in DataManager.typeDict[inp_type]:
+                DataManager.lastUniqueKey += 1
+            return str(DataManager.lastUniqueKey)
+        else:
+            DataManager.lastUniqueKey += 1
+            return str(DataManager.lastUniqueKey)
 
+    # returns ConsoleGui Element from dict
+    @staticmethod
+    def ChooseElementInDictOfTypeFrom(question, inp_element):
+        inp_type = type(inp_element)
+        if inp_type in DataManager.typeDict:
+            return getElementByMultipleChoice(question, DataManager.typeDict[inp_type])
+        else:
+            print("no dict of element-type found")
+            return None
 
-
-
+    # Removes ConsoleGui Element from dict
+    @staticmethod
+    def RemoveElementInDictOfTypeFrom(question, inp_element):
+        element = DataManager.ChooseElementInDictOfTypeFrom(question, inp_element)
+        if element == None:
+            return "ERROR"
+        else:
+            removeKey = element.getKey()
+            inp_type = type(element)
+            del DataManager.typeDict[inp_type][removeKey]
 
 
 
