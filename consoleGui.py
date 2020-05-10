@@ -202,6 +202,7 @@ class StateEngine:
         StateEngine.stateStack.clear()
         StateEngine.setState(StateEngine.safeState)
 
+    # goes back one state in the stack
     @staticmethod
     def getPreviousState():
         if StateEngine.stateStack:
@@ -212,6 +213,11 @@ class StateEngine:
         else:
             StateEngine.stop()
             raise Exception('Unexpected end of stateStack in getPreviousState (no safeState set)')
+
+    # push state to stack without executing it
+    @staticmethod
+    def pushStateToStack(inp_state):
+        StateEngine.stateStack.append(inp_state)
 
     # starts the state engine
     @staticmethod
