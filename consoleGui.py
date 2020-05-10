@@ -111,7 +111,7 @@ def getInt(question):
 # checks if there are no errors in answers
 def noErrorsInValues(inp_ansIterable):
     if type(inp_ansIterable) == type(list()):
-        for ans in list:
+        for ans in inp_ansIterable:
             if str(ans) == 'ERROR' or str(ans) == '-1':
                 return False
     else:
@@ -122,13 +122,22 @@ def noErrorsInValues(inp_ansIterable):
 # replaces ERROR values with a more friendly string 'None'
 def replaceErrorForNone(inp_ansIterable):
     if type(inp_ansIterable) == type(list()):
-        for ans in list:
+        for ans in inp_ansIterable:
             if str(ans) == 'ERROR' or str(ans) == '-1':
                 ans = 'None'
     else:
         for item in inp_ansIterable.items():
             if str(item[1]) == 'ERROR' or str(item[1]) == '-1':
                 item[1] = 'None'
+
+# list all elements in iterable
+def listElements(inp_elementIterable):
+    if type(inp_elementIterable) == type(list()):
+        for element in inp_elementIterable:
+            element.list()
+    else:
+        for item in inp_elementIterable.items():
+                item[1].list()
 
 class Element(ABC):
 
