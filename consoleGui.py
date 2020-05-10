@@ -139,6 +139,11 @@ def listElements(inp_elementIterable):
         for item in inp_elementIterable.items():
                 item[1].list()
 
+# list all keyValue pairs in dict
+def listDict(inp_dict):
+    for item in inp_dict.items():
+        print(str(item[0]) + ': ' + str(item[1]))
+
 class Element(ABC):
 
     def __init__(self):
