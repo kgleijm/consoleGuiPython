@@ -1,3 +1,4 @@
+import warnings
 from abc import ABC, abstractmethod
 
 #   method that will create a choice dialog
@@ -175,7 +176,7 @@ class Class(Element, ABC):
         return output
 
 class StateEngine:
-    # class thate contains an action and description of the state to
+    # class that contains an action and description of the state to
     # minimize boilerplate code
     class State:
 
@@ -189,8 +190,28 @@ class StateEngine:
         def getDescription(self):
             return self.desc
 
+    # static state variables
+    safeState = None
+    stateStack = []
     currentState = None
     running = False
+
+    # currentState will be set to this state when an unexpected end of the stateStack hes been found
+    @staticmethod
+    def setSafeState(inp_safeState):
+        StateEngine.stateStack.clear()
+        StateEngine.setState(StateEngine.safeState)
+
+    @staticmethod
+    def getPreviousState():
+        if StateEngine.stateStack:
+            return StateEngine.stateStack.pop()
+        elif StateEngine.safeState:
+            warnings.warn("defaulted to safeState")
+            return StateEngine.safeState
+        else:
+            StateEngine.stop()
+            raise Exception('Unexpected end of stateStack in getPreviousState (no safeState set)')
 
     # starts the state engine
     @staticmethod
@@ -206,14 +227,26 @@ class StateEngine:
 
     #  set new state
     @staticmethod
-    def setState(newState):
+    def setState(newState, stacked=True):
         StateEngine.currentState = newState
+        if stacked:
+            StateEngine.stateStack.append(newState)
         if not StateEngine.running:
             StateEngine.start()
 
+    # go to previous stacked state
+    @staticmethod
+    def setStateToPrevious():
+        StateEngine.setState(StateEngine.getPreviousState(), stacked=False)
+
+    # prompt user with a multiple choice of state descriptions
     @staticmethod
     def setStateByMultipleChoice(question, *states):
-        StateEngine.setState(states[multipleChoice(question, [str(state[0]) + state[1].getDescription() for state in enumerate(states)])])
+        index = multipleChoice(question, [str(state[0]) + state[1].getDescription() for state in enumerate(states)])
+        if index is not -1:
+            StateEngine.setState(states[index])
+        else:
+            StateEngine.setState(StateEngine.getPreviousState())
 
 class DataManager:
     # dict that holds all dicts of registered objects accessed by key:
