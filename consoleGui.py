@@ -107,9 +107,28 @@ def getInt(question):
         except:
             print("that is not a valid answer, try again or type exit to exit")
 
-# checks if there are no errors in answers #TODO write method
-def noErrorsInValues(self):
-    pass
+
+# checks if there are no errors in answers
+def noErrorsInValues(inp_ansIterable):
+    if type(inp_ansIterable) == type(list()):
+        for ans in list:
+            if str(ans) == 'ERROR' or str(ans) == '-1':
+                return False
+    else:
+        for item in inp_ansIterable.items():
+            if str(item(1)) == 'ERROR' or str(item(1)) == '-1':
+                return False
+
+# replaces ERROR values with a more friendly string 'None'
+def replaceErrorForNone(inp_ansIterable):
+    if type(inp_ansIterable) == type(list()):
+        for ans in list:
+            if str(ans) == 'ERROR' or str(ans) == '-1':
+                ans = 'None'
+    else:
+        for item in inp_ansIterable.items():
+            if str(item[1]) == 'ERROR' or str(item[1]) == '-1':
+                item[1] = 'None'
 
 class Element(ABC):
 
@@ -128,7 +147,7 @@ class Element(ABC):
     def getKey(self):
         return self.key
 
-def getElementByMultipleChoice(question, input):
+def getElementByMultipleChoice(question, inp_input):
     # print(type(input))
     if type(input) is list:
         answers = list()
@@ -136,7 +155,7 @@ def getElementByMultipleChoice(question, input):
             answers.append(str(i) + str(input[i].getMPQlisting()))
         multipleChoice(question, answers)
     elif type(input) is dict:
-        return getElementByMultipleChoice(question, list(input.values()))
+        return getElementByMultipleChoice(question, list(inp_input.values()))
     else:
         print("ERROR: not a valid iterable for multiplechoice")
 
