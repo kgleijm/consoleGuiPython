@@ -332,6 +332,11 @@ class StateEngine:
     def pushStateToStack(inp_state):
         StateEngine.stateStack.append(inp_state)
 
+    # clear state stack
+    @staticmethod
+    def clearStateStack():
+        StateEngine.stateStack.clear()
+
     # starts the state engine
     @staticmethod
     def start():
