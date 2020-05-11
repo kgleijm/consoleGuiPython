@@ -9,8 +9,10 @@ def openQuestionChecked(question, checks=None, negativeResponse=None):
     #   base output if no checks or negative response are needed
     if checks is None and negativeResponse is None:
         #   just return answer
-        print("\n" + question)
+        print("\n" + question + "\n type exit if you don't know")
         output = input()
+        if output is 'exit':
+            return 'ERROR'
         return output
 
     #   interpret question when checks are given
