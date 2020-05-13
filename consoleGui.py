@@ -427,5 +427,12 @@ class DataManager:
             inp_type = type(element)
             del DataManager.typeDict[inp_type][removeKey]
 
+    @staticmethod
+    def getDictOfType(inp_element):
+        try:
+            return DataManager.typeDict[type(inp_element)]
+        except Exception:
+            raise Exception('get Dict of type found no dict of type: ' + type(inp_element))
+
 
 
