@@ -163,15 +163,15 @@ class Element(ABC):
     def getKey(self):
         return self.key
 
-def getElementByMultipleChoice(question, inp_input):
+def getElementByMultipleChoice(question, input):
     # print(type(input))
     if type(input) is list:
         answers = list()
         for i in range(len(input)):
             answers.append(str(i) + str(input[i].getMPQlisting()))
-        multipleChoice(question, answers)
+        return input[multipleChoice(question, answers)]
     elif type(input) is dict:
-        return getElementByMultipleChoice(question, list(inp_input.values()))
+        return getElementByMultipleChoice(question, list(input.values()))
     else:
         print("ERROR: not a valid iterable for multiplechoice")
 
