@@ -169,7 +169,10 @@ def getElementByMultipleChoice(question, input):
         answers = list()
         for i in range(len(input)):
             answers.append(str(i) + str(input[i].getMPQlisting()))
-        return input[multipleChoice(question, answers)]
+        try:
+            return input[multipleChoice(question, answers)]
+        except Exception:
+            return None
     elif type(input) is dict:
         return getElementByMultipleChoice(question, list(input.values()))
     else:
